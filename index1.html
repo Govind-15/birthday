@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Aqsa 🎉</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow:hidden;
+    text-align: center;
+}
+
+/* Stage layout */
+.stage {
+    position: fixed;
+    top:0; left:0;
+    width:100vw;
+    height:100vh;
+    display: none;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    z-index: 1;
+}
+.stage.active {
+    display:flex;
+    z-index: 999;
+}
+
+/* Background animations */
+.bg-animated {
+    background: linear-gradient(270deg, #ffdee9, #b5fffc);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Floating emojis */
+.floating {
+    position: fixed;
+    font-size: 24px;
+    animation: floatAnim 8s linear infinite;
+    opacity: 0.8;
+}
+@keyframes floatAnim {
+    0% { transform: translateY(100vh) scale(1); }
+    100% { transform: translateY(-10vh) scale(1.2); }
+}
+
+/* Buttons */
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    background: linear-gradient(45deg, #ff4da6, #ff99cc);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    margin-top: 20px;
+}
+button:hover { transform: scale(1.05); }
+
+/* Cake */
+.cake-container {
+    position: relative;
+    width: 280px;
+}
+.layer {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    border-radius: 0 0 20px 20px;
+    margin-top: -10px;
+}
+.layer:nth-child(1) { background: #ffb6c1; z-index: 3; }
+.layer:nth-child(2) { background: #ffd1a9; z-index: 2; }
+.layer:nth-child(3) { background: #b0e0e6; z-index: 1; }
+.layer::before {
+    content:"";
+    position:absolute;
+    top:-25px;
+    left:0;
+    width:100%;
+    height:40px;
+    border-radius: 50% 50% 0 0;
+    box-shadow: inset 0 -5px rgba(255,255,255,0.5);
+}
+.layer:nth-child(1)::before { background:#fff0f5; }
+.layer:nth-child(2)::before { background:#fff7e6; }
+.layer:nth-child(3)::before { background:#e0ffff; }
+
+/* Candles */
+.candle {
+    position:absolute;
+    width:15px;
+    height:50px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #ff69b4,
+        #ff69b4 6px,
+        #ffffff 6px,
+        #ffffff 12px
+    );
+    border-radius:5px;
+    top:-70px;
+}
+.candle:nth-child(4) { left:30px; }
+.candle:nth-child(5) { left:80px; }
+.candle:nth-child(6) { left:130px; }
+.candle:nth-child(7) { left:180px; }
+.candle:nth-child(8) { left:230px; }
+
+/* Flames */
+.flame {
+    position:absolute;
+    top:-20px;
+    left:50%;
+    transform: translateX(-50%);
+    width:18px;
+    height:25px;
+    background: radial-gradient(circle, yellow 40%, orange 60%, transparent 70%);
+    border-radius:50%;
+    animation: flicker 0.25s infinite;
+    box-shadow: 0 0 15px orange;
+}
+@keyframes flicker {
+    0%,100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.2); }
+}
+
+/* Smoke */
+.smoke {
+    position:absolute;
+    top:-20px;
+    left:50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 40%, transparent 70%);
+    border-radius:50%;
+    opacity:0;
+    animation: rise 3s forwards;
+}
+@keyframes rise {
+    0% { transform: translate(-50%,0) scale(0.5); opacity:0.7; }
+    50% { opacity:0.5; }
+    100% { transform: translate(-50%,-200px) translateX(var(--drift)) scale(var(--scale)); opacity:0; }
+}
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(2deg); }
+    50% { transform: rotate(-2deg); }
+    75% { transform: rotate(1deg); }
+}
+
+/* Sparkles */
+.sparkle {
+    position:absolute;
+    width:6px;
+    height:6px;
+    background: gold;
+    border-radius:50%;
+    opacity:0.8;
+    animation: sparkleFloat 2s infinite ease-in-out;
+}
+@keyframes sparkleFloat {
+    0% { transform: translateY(0) scale(1); opacity:1; }
+    50% { transform: translateY(-20px) scale(1.2); opacity:0.5; }
+    100% { transform: translateY(0) scale(1); opacity:1; }
+}
+
+/* Flip card */
+.flip-card {
+    background-color: transparent;
+    width: 500px;
+    height: 300px;
+    perspective: 1000px;
+}
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%; height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.flip-card-front {
+    background: #ffb6c1;
+    color: #fff;
+    font-size: 20px;
+}
+.flip-card-back {
+    background: #fff;
+    color: #333;
+    transform: rotateY(180deg);
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: left;
+}
+
+/* Fireworks */
+canvas {
+    position: absolute;
+    top:0; left:0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, #000 0%, #020202 100%);
+}
+.fireworks-text {
+    position: absolute;
+    color: #fff;
+    font-size: 32px;
+    text-shadow: 0 0 10px #ff0, 0 0 20px #f0f, 0 0 30px #0ff;
+}
+</style>
+</head>
+<body>
+
+<!-- Floating emojis -->
+<span class="floating" style="left:10%;">❤️</span>
+<span class="floating" style="left:30%; animation-delay:2s;">🎈</span>
+<span class="floating" style="left:50%; animation-delay:4s;">✨</span>
+<span class="floating" style="left:70%; animation-delay:6s;">🎉</span>
+<span class="floating" style="left:90%; animation-delay:1s;">💖</span>
+
+<!-- Stage 1 -->
+<div id="stage1" class="stage active bg-animated" style="display:flex;">
+    <button id="startBtn">Hey, click on this!</button>
+</div>
+
+<!-- Stage 2 -->
+<div id="stage2" class="stage" style="background: radial-gradient(circle, #222 0%, #000 100%); color:white;">
+    <h1 style="
+        position:absolute;
+        top:20px;
+        left:50%;
+        transform:translateX(-50%);
+        font-size:36px;
+        font-weight:bold;
+        z-index:9999;
+        text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+    ">
+        🎉 Happy Birthday Aqsa 🎂
+    </h1>
+    <div class="cake-container" id="cake" style="margin-top:200px;">
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+    </div>
+    <button id="blowBtn">Blow the Candles 🎂</button>
+</div>
+
+<!-- Stage 3 -->
+<div id="stage3" class="stage bg-animated">
+    <div class="flip-card" id="flipCard">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                💌 Click to Reveal Your Birthday Message
+            </div>
+            <div class="flip-card-back">
+                Happy birthday Aqsa 🎉, I wish you a very happy birthday and have a great year ahead 🌟.  
+                May Allah fulfill all your wishes 🙏 and keep smiling 😊.  
+                And kabhi firse experiments mat karna 💀😂🤭.  
+                All the best for your future 💖.  
+                I know we don’t know each other and kabhi dekha bhi nahi ek dusre ko 😅,  
+                but that’s fine — as a friend it doesn’t matter now 🤗.  
+                It’s like you’re my imaginary friend hehe 😜 — which is also a great thing 💕.
+            </div>
+        </div>
+    </div>
+    <button id="finaleBtn">Go to Finale 🎆</button>
+</div>
+
+<!-- Stage 4 -->
+<div id="stage4" class="stage">
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="fireworks-text">🎆 Happy Birthday Aqsa 🎆</div>
+</div>
+
+<audio id="bgMusic" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" loop></audio>
+
+<script>
+function switchStage(current, next) {
+    document.getElementById(current).classList.remove('active');
+    document.getElementById(current).style.display = 'none';
+    document.getElementById(next).style.display = 'flex';
+    document.getElementById(next).classList.add('active');
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+    switchStage('stage1', 'stage2');
+    let music = document.getElementById('bgMusic');
+    music.volume = 0.6;
+    music.play();
+
+    const cake = document.getElementById("cake");
+    for (let i = 0; i < 20; i++) {
+        let sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        sparkle.style.left = `${Math.random()*260}px`;
+        sparkle.style.top = `${Math.random()*150 - 50}px`;
+        sparkle.style.animationDelay = `${Math.random()*2}s`;
+        cake.appendChild(sparkle);
+    }
+});
+
+document.getElementById('blowBtn').addEventListener('click', () => {
+    document.querySelectorAll('.flame').forEach(f => f.remove());
+    const cake = document.getElementById("cake");
+    cake.style.animation = "wiggle 0.5s ease";
+
+    for (let i = 0; i < 8; i++) {
+        let puff = document.createElement("div");
+        puff.className = "smoke";
+        puff.style.width = puff.style.height = `${30 + Math.random()*20}px`;
+        puff.style.setProperty("--drift", `${(Math.random()*40)-20}px`);
+        puff.style.setProperty("--scale", 1 + Math.random()*0.5);
+        puff.style.animationDelay = `${i * 0.15}s`;
+        cake.appendChild(puff);
+        setTimeout(() => puff.remove(), 3000);
+    }
+
+    document.querySelectorAll('.sparkle').forEach(s => s.style.opacity = '0');
+
+    setTimeout(() => switchStage('stage2', 'stage3'), 3500);
+});
+
+document.getElementById('flipCard').addEventListener('click', () => {
+    document.getElementById('flipCard').classList.add('flipped');
+});
+
+document.getElementById('finaleBtn').addEventListener('click', () => {
+    switchStage('stage3', 'stage4');
+});
+
+// Fireworks
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles = [];
+function createFirework(x, y) {
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x, y,
+            color: `hsl(${Math.random()*360}, 100%, 50%)`,
+            radius: Math.random()*3+2,
+            speedX: Math.random()*4-2,
+            speedY: Math.random()*4-2,
+            life: 100
+        });
+    }
+}
+function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p, i) => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.life--;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        if (p.life <= 0) particles.splice(i,1);
+    });
+    requestAnimationFrame(animate);
+}
+setInterval(() => createFirework(Math.random()*canvas.width, Math.random()*canvas.height), 500);
+animate();
+</script>
+</body>
+</html>
